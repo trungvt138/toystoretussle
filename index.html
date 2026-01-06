@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Toy Store Tussle — A Toy Store Game</title>
+  <!-- Your external stylesheet -->
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header class="card">
+    <div>
+      <h1>Toy Store Tussle</h1>
+    </div>
+    <div class="toolbar">
+      <button id="audioBtn" title="Mute / Unmute audio">🔊</button>
+
+      <input
+        id="volumeSlider"
+        type="range"
+        min="0"
+        max="100"
+        value="60"
+        aria-label="Volume"
+      />
+
+      <button id="newBtn" class="btn-primary">New Game</button>
+      <button id="rulesBtn" class="btn-primary">Rules</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- LEFT: Board -->
+    <section class="card pad board-section">
+      <div id="boardContainer">
+        <canvas id="board" width="720" height="720"></canvas>
+      </div>
+    </section>
+
+    <!-- RIGHT: Sidebar -->
+    <aside class="side">
+      <div class="card pad">
+        <div class="row sidebar-head">
+          <span class="badge" id="supplyBadge">Toys left: 36</span>
+        </div>
+        <div class="display" id="display"></div>
+      </div>
+
+      <div class="card pad" id="liveScoreCard">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div class="pill">Live Score</div>
+        <div class="row">
+          <span class="badge" id="p1Focus">P1: Genres</span>
+          <span class="badge" id="p2Focus">P2: Colors</span>
+        </div>
+      </div>
+
+      <div class="row" style="justify-content:space-between; margin-top:10px;">
+        <div><b>Player 1</b> <span class="badge" id="p1Score">0</span></div>
+        <div><b>Player 2</b> <span class="badge" id="p2Score">0</span></div>
+      </div>
+    </div>
+
+
+      <!-- <div class="card pad">
+        <div class="pill">Turn Flow</div>
+        <div class="hint">
+          1) Slide exactly 1 toy along its row/column until blocked.
+          2) Place exactly 1 toy from the display into any empty space.
+          Then refill the display.
+        </div>
+      </div> -->
+    </aside>
+  </main>
+
+  <!-- Focus modal -->
+  <dialog id="focusDialog">
+    <div class="modal-head">Choose each player’s scoring focus</div>
+    <div class="modal-body">
+      <p class="hint">
+        Each player secretly focuses on <b>Toys</b> or <b>Colors</b>. The chosen
+        focus determines what clusters they score.
+      </p>
+      <div class="hr"></div>
+      <div class="choice">
+        <div>
+          <h3>Player 1</h3>
+          <label><input type="radio" name="p1" value="genre" checked> Toys</label>
+          <label><input type="radio" name="p1" value="color"> Colors</label>
+        </div>
+        <div>
+          <h3>Player 2</h3>
+          <label><input type="radio" name="p2" value="genre"> Toys</label>
+          <label><input type="radio" name="p2" value="color" checked> Colors</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button id="startBtn" class="btn-primary">Start</button>
+    </div>
+  </dialog>
+
+  <!-- Rules modal -->
+  <dialog id="rulesDialog">
+  <div class="modal-head">Rules</div>
+  <div class="modal-body">
+    <p><b>Welcome to Toy Store Tussle!</b> Two friends are browsing the toy store with totally different “collector brains.”
+      One is hunting for <b>the same toy in lots of colors</b>, while the other wants <b>lots of different toys in the same color</b>.
+      Each turn you can slide a toy through open aisles and place a new arrival from the display to build the best collection.</p>
+
+    <ul>
+      <li><b>Board:</b> 6×6. <b>Tiles:</b> 36 (6 Toys × 6 Colors). <b>Display:</b> 6 tiles.</li>
+
+      <li><b>Your turn:</b>
+        <ul>
+          <li><b>Slide (optional):</b>
+            You may slide <b>one</b> toy already on the board.
+            Move it up, down, left, or right through empty spaces.
+            You can skip this step.</li>
+          <li><b>Place a Toy:</b>
+            Pick <b>one</b> toy from the Display and place it on any empty space.
+            The Display refills automatically.</li>
+        </ul>
+      </li>
+
+      <li><b>Focus:</b> Each player scores connected (up/down/left/right) groups that match their focus:
+        <i>Toys</i> or <i>Colors</i>.</li>
+      <li><b>Points per group size:</b> 2→1, 3→3, 4→6, 5→10, 6→15.</li>
+      <li><b>End:</b> When the board is full, scores are calculated. Highest score wins.</li>
+    </ul>
+
+    <p class="hint">Tip: Open a lane with your slide, then place to touch multiple clusters at once.</p>
+  </div>
+  <div class="modal-foot"><button id="closeRules">Close</button></div>
+</dialog>
+
+
+  <dialog id="scoreDialog">
+    <div class="modal-head">Scores</div>
+    <div class="modal-body">
+      <div id="scoreContent"></div>
+    </div>
+    <div class="modal-foot">
+      <button id="newMatchBtn" class="btn-primary">New Match</button>
+      <button id="closeScore">Close</button>
+    </div>
+  </dialog>
+
+<!-- Turn banner overlay -->
+<div id="turnBanner" aria-hidden="true">
+  <div class="banner-strip">
+    <div id="turnBannerText">Player 1’s Turn</div>
+  </div>
+</div>
+
+  <!-- Game logic that loads 0000…0035 sliced icons -->
+  <script src="app.js" defer></script>
+</body>
+</html>
